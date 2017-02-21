@@ -8,17 +8,6 @@ import java.util.Random;
 
 public class Pruning {
 	
-	/*
-	 * Function Name: pruneTree()
-	 * Description: Function to prune the tree constructed by either of the algorithm
-	 * Input: 
-	 * Root - Root node of the tree
-	 * testing_data - Testing data set
-	 * Validation_data_1 - Validation data set
-	 * no_of_nodes_to_prune - No of nodes selected for pruning
-	 * countNode - No of nodes in the tree
-	 * Output: NONE 
-	 */
 	public static void pruneTree(Node root,ArrayList<Instance> testing_data,ArrayList<Instance> validation_data_1,float prune_factor,int node_Count){
 		ArrayList<Integer> nodesToPrune = new ArrayList<Integer>();
 		//Pruning random nodes to find best accuracy
@@ -52,13 +41,6 @@ public class Pruning {
 		System.out.println("Accuracy after pruning on testing data = "+findAccuracy(root,testing_data));
 	}	
 
-	/*
-	 * Description: Given a Root of a tree and a node id returns a node with given node id
-	 * Input: 
-	 * Root - Root node of the tree
-	 * Node Id - Node Id to be searched
-	 * Output: Returns Node with given Node Id
-	 */
 	public static Node getNode(Node root,int nodeId){
 		Node node1 = null;
 		Queue<Node> q = new LinkedList<Node>();
@@ -79,21 +61,18 @@ public class Pruning {
 	}
 	
 	
-	/*
-	 * To calculate the accuracy of a given decision tree using test data
-	 * Input: root ,test_data
-	 * Output: Returns accuracy of a given decision tree model
-	 */	
-	public static double findAccuracy(Node root, ArrayList<Instance> test_data){
+	public static double findAccuracy(Node root, ArrayList<Instance> data_set){
 		Node temp = null;
 		double accuracy = 0.0;		
-		Iterator<Instance> iter = test_data.iterator();
+		Iterator<Instance> iter = data_set.iterator();
 		int count = 0;
 		
 		while(iter.hasNext()){
 			Instance record = iter.next();
 			temp = root;
 			while(!temp.isLeafNode){
+				if(temp.attribute == -1)
+					System.out.println(temp.attribute);
 				if(record.attributes[temp.attribute].equals("0"))
 					temp = temp.left;
 				else
@@ -103,8 +82,8 @@ public class Pruning {
 				count++;
 			} 
 		}
-		System.out.println("Test data size = "+ test_data.size());
-		accuracy = (double)(count*100)/test_data.size();		
+		System.out.println("Test data size = "+ data_set.size());
+		accuracy = (double)(count*100)/data_set.size();		
 		return accuracy;
 	}	
 	

@@ -4,117 +4,96 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ID3Algorithm {
-	/*
-	 * Function Name: calcInformationGain()
-	 * Description: Function to calculate the information gain for given dataset
-	 * Input: 
-	 * data - Given data for the node
-	 * attributes_fixed - Arraylist that contains the attributes that are not allowed to be selecte
-	 * since they are already chosen by the ancestors
-	 * Output: Return the attribute index with maximum information gain for the given data set 
-	 */	
-	public static int calcInformationGain(ArrayList<Instance> data,ArrayList<Integer> attributes_fixed)
+	
+	public static int calcIG(ArrayList<Instance> dataset,ArrayList<Integer> attributes)
 	{
-		double classEntropy = findEntropy(data);
-		
-		double num_pos=0;
-		double num_neg=0;
-		double num_pos_0=0;
-		double num_neg_0=0;
-		double num_pos_1=0;
-		double num_neg_1=0;
-		double gain=0,maxGain=0;
-		double constant = Math.log10(2);
-		int maxGainIndex=-1;
-		int data_size = data.size();
+		double classEntropy = findEntropy(dataset);
+		int data_size = dataset.size();
+		int maxIGIndex=-1;
+		double IG=0,maxIG=0;
+		double pos_attr=  0, neg_attr=0;
+		double pos_attr_0 = 0, neg_attr_0=0;
+		double pos_attr_1 = 0, neg_attr_1=0;
+		double log2_val = Math.log10(2);	
 		
 		if(classEntropy==0)
 			return -1;
 		
 		for(int j=0;j<Instance.attributeCount;j++)
 		{
-			for(int i=0;i<data.size();i++)
+			for(int i=0;i<dataset.size();i++)
 			{
-				Instance inst= data.get(i);
+				Instance inst= dataset.get(i);
 				if(inst.attributes[j].matches("1"))
 				{
-					num_pos++;
+					pos_attr++;
 					if(inst.classValue.matches("1"))
-						num_pos_1++;
+						pos_attr_1++;
 					else
-						num_neg_1++;
+						neg_attr_1++;
 				}else{
-					num_neg++;
+					neg_attr++;
 					if(inst.classValue.matches("1"))
-						num_pos_0++;
+						pos_attr_0++;
 					else
-						num_neg_0++;
+						neg_attr_0++;
 				}
 			}
 			
-			double prob_pos_0 = (double)num_pos_0/num_neg;
-			double prob_pos_1 = (double)num_pos_1/num_pos;
-			double prob_neg_0 = (double)num_neg_0/num_neg;
-			double prob_neg_1 = (double)num_neg_1/num_pos;
-			double term1 = 0, term2 = 0;
+			double prob_pos_0 = (double)pos_attr_0/neg_attr;
+			double prob_pos_1 = (double)pos_attr_1/pos_attr;
+			double prob_neg_0 = (double)neg_attr_0/neg_attr;
+			double prob_neg_1 = (double)neg_attr_1/pos_attr;
+			double ent_pos = 0, ent_neg = 0;
 			if(prob_pos_1==0)
-				term1 = 0;
+				ent_pos = 0;
 			else
-				term1 = Math.log10(prob_pos_1)/constant;
+				ent_pos = Math.log10(prob_pos_1)/log2_val;
 			
 			if(prob_neg_1==0)
-				term2 = 0;
+				ent_neg = 0;
 			else 
-				term2 = Math.log10(prob_neg_1)/constant;
+				ent_neg = Math.log10(prob_neg_1)/log2_val;
 			
-			double entropy_1 = -((prob_pos_1*term1) + (prob_neg_1*term2));
+			double entropy_1 = -((prob_pos_1*ent_pos) + (prob_neg_1*ent_neg));
 			
 			if(prob_pos_0==0)
-				term1 = 0;
+				ent_pos = 0;
 			else
-				term1 = Math.log10(prob_pos_0)/constant;
+				ent_pos = Math.log10(prob_pos_0)/log2_val;
 			
 			if(prob_neg_0==0)
-				term2 = 0;
+				ent_neg = 0;
 			else
-				term2 = Math.log10(prob_neg_0)/constant;
+				ent_neg = Math.log10(prob_neg_0)/log2_val;
 			
-			double entropy_0 = -((prob_pos_0*term1) + (prob_neg_0*term2));
+			double entropy_0 = -((prob_pos_0*ent_pos) + (prob_neg_0*ent_neg));
 			
-			gain = classEntropy - (((double)num_pos/(double)data_size)*entropy_1) - (((double)num_neg/(double)data_size)*entropy_0);
-				if(j==0 && !Double.isNaN(gain) && !attributes_fixed.contains(j))
+			IG = classEntropy - (((double)pos_attr/(double)data_size)*entropy_1) - (((double)neg_attr/(double)data_size)*entropy_0);
+				if(j==0 && !Double.isNaN(IG) && !attributes.contains(j))
 				{
-					maxGain = gain;
-					maxGainIndex = j;
+					maxIG = IG;
+					maxIGIndex = j;
 				}
 				else
 				{
-					if(gain>maxGain && !Double.isNaN(gain) && !attributes_fixed.contains(j))
+					if(IG>maxIG && !Double.isNaN(IG) && !attributes.contains(j))
 					{
-						maxGain=gain;
-						maxGainIndex=j;
+						maxIG=IG;
+						maxIGIndex=j;
 					}
 				}
-				gain=0;
-				num_pos_0=0;
-				num_pos_1=0;
-				num_neg_0=0;
-				num_neg_1=0;
-				num_pos=0;
-				num_neg=0;		
+				IG=0;
+				pos_attr_0=0;
+				pos_attr_1=0;
+				neg_attr_0=0;
+				neg_attr_1=0;
+				pos_attr=0;
+				neg_attr=0;		
 		}
-		return maxGainIndex;
+		return maxIGIndex;
 	}
 	
-
-	/*
-	 * Function Name: classifyData()
-	 * Description: Function is to create data based on the attributes selected
-	 * Input: 
-	 * Root node,
-	 * attribute_value -0 or 1 to classify data
-	 * Output: returns a child node of the given root node with classified data for given attrValue
-	 */	
 	public static Node classifyData(Node root,String attrValue) {
 		
 		Node node = new Node(); 
@@ -131,23 +110,16 @@ public class ID3Algorithm {
 	}
 
 	
-	/*
-	 * Function Name: Entropy()
-	 * Description: To calculate entropy of a class
-	 * Input: data of the class
-	 * output: the class Entropy 
-	 */	
-	
-	public static double findEntropy(ArrayList<Instance> data){
+	public static double findEntropy(ArrayList<Instance> dataset){
 	
 		double entropy = 0.0;
-		int size = data.size();
+		int size = dataset.size();
 		int count1 = 0;
 		int count0=0;
-		double constant = Math.log10(2);
-		double term1 = 0, term2 = 0;
+		double log2_val = Math.log10(2);
+		double ent_pos = 0, ent_neg = 0;
 		
-		Iterator<Instance> iter = data.iterator();
+		Iterator<Instance> iter = dataset.iterator();
 		if(size==0)
 			return 0;
 		else{
@@ -167,15 +139,15 @@ public class ID3Algorithm {
 				entropy = 0;
 			else {
 				if(class_1_probability==0)
-					term1 = 0;
+					ent_pos = 0;
 				else 
-					term1 = Math.log10(class_1_probability)/constant;
+					ent_pos = Math.log10(class_1_probability)/log2_val;
 				if(class_0_probability==0)
-					term2 = 0;
+					ent_neg = 0;
 				else
-					term2 = Math.log10(class_0_probability)/constant;
+					ent_neg = Math.log10(class_0_probability)/log2_val;
 						
-				entropy = - ((class_1_probability*term1) + (class_0_probability*term2));
+				entropy = - ((class_1_probability*ent_pos) + (class_0_probability*ent_neg));
 			}
 		}
 		return entropy;

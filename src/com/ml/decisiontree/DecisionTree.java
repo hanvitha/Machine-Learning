@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-
-
 public class DecisionTree {
 	
 	public static Node root = null;
@@ -15,16 +13,7 @@ public class DecisionTree {
 	public static int attrCount;
 	public static int tree_depth=0;
 	
-
-	/*
-	 * Function Description: Constructs decision tree using ID3 Algorithm
-	 * Input: 
-	 * training_data - Training data set
-	 * Output: displays builtDecisionTree
-	 * 
-	 * */
-
-	public static Node GenerateDecisionTree(ArrayList<Instance> dataset, String dataSetType){
+	public static Node GenerateDecisionTreeUsingID3(ArrayList<Instance> dataset, String dataSetType){
 			
 		Node rootNode=null;
 		int selectedAttr=0;
@@ -42,7 +31,7 @@ public class DecisionTree {
 				rootNode.classLabel = getClassLabel(rootNode.rowData);
 				root = rootNode;			
 			}
-			selectedAttr = ID3Algorithm.calcInformationGain(rootNode.rowData,rootNode.deleted_attrs);
+			selectedAttr = ID3Algorithm.calcIG(rootNode.rowData,rootNode.deleted_attrs);
 			rootNode.attribute = selectedAttr;
 			rootNode.classLabel = getClassLabel(rootNode.rowData);
 			rootNode.deleted_attrs.add(selectedAttr);
@@ -83,16 +72,6 @@ public class DecisionTree {
 		return root;
 	}
 	
-
-	
-	
-	/*
-	 * Function Name: getClassLabel()
-	 * Description: Function to determine the class label for given data
-	 * Input: 
-	 * data - data set
-	 * Output: Returns the class label for a given data set 
-	 */	
 	public static char getClassLabel(ArrayList<Instance> rowData){		
 		
 		int classLabel0 = 0;
@@ -113,8 +92,6 @@ public class DecisionTree {
 			return '0';
 		}
 	}
-	
-	
 
 	public void displayTree(Node root){
 		tree_depth++;
@@ -147,21 +124,27 @@ public class DecisionTree {
 		tree_depth--;
 	}
 	
-
-
-		/*
-		 * Function Name: getAttributeLabel()
-		 * Description: Function to return a attribute label given a attribute number
-		 * Input: 
-		 * attributeNo - Integer value for the given attribute number
-		 * Output: Returns the corresponding string representing the attribute 
-		 */	
 	public static String getAttributeLabel(int attributeNo){
 		if(attributeNo!=-1){
 			return Instance.attributeLabels.get(attributeNo);
 		}
 		else{
 			return "-1";
+		}
+	}
+	public static double AverageDepth(Node root) {
+		int sumOfNodes = GetSumOfNodes(root, 0);
+		return (double)sumOfNodes/(nodes-1);
+	}
+	private static int GetSumOfNodes(Node root, int i) {
+		if(root == null){
+			return 0;
+		}
+		else if(root.left == null && root.right == null){
+			return i;//depth
+		}
+		else{
+			return GetSumOfNodes(root.left, i+1)+GetSumOfNodes(root.right, i+1);
 		}
 	}
 		

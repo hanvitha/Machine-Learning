@@ -3,18 +3,10 @@ package com.ml.decisiontree;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.io.FileReader;
 import java.io.IOException;
 
 
-/*
- * Description: 
- * Function: FetchData function fetches the data from input files and save into the ArrayList
- * Input: Sting format file path of dataSet(training_data/test_data/validation_data)
- * Output: Returns an ArrayList of that dataSet
- * 
-*/
 
 public class Instance {
 	public String classValue;
@@ -23,6 +15,7 @@ public class Instance {
 	public static int attributeCount;
 	public static ArrayList<String> attributeLabels = new ArrayList<String>();
 	
+
 	public ArrayList<Instance> FetchData(String dataSet){
 		String line = "";
 		int count = 0, x= 0;
