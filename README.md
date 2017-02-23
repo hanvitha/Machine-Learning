@@ -10,7 +10,7 @@ java main training_set.csv validation_set.csv test_set.csv 0.2 </br>
 
 <b>Java project name:</b> MachineLearning</br></br>
 
-<b>Source code:<b></br>
+<b>Source code:</b></br>
 src/com/ml/decisiontree</br>
 
 <b>Steps to run the code in eclipse:</b></br>
