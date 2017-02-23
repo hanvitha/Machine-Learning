@@ -37,8 +37,8 @@ public class Pruning {
 		} 
 		System.out.println("****************************************************");
 		System.out.println("Post-pruning Accuracy:");
-		System.out.println("Accuracy after pruning on validation data = "+findAccuracy(root,validation_data_1));
-		System.out.println("Accuracy after pruning on testing data = "+findAccuracy(root,testing_data));
+		System.out.println("Accuracy after pruning on validation data = "+findAccuracy(root,validation_data_1, "Validation"));
+		System.out.println("Accuracy after pruning on testing data = "+findAccuracy(root,testing_data, "Testing"));
 	}	
 
 	public static Node getNode(Node root,int nodeId){
@@ -61,7 +61,7 @@ public class Pruning {
 	}
 	
 	
-	public static double findAccuracy(Node root, ArrayList<Instance> data_set){
+	public static double findAccuracy(Node root, ArrayList<Instance> data_set, String dataset_type){
 		Node temp = null;
 		double accuracy = 0.0;		
 		Iterator<Instance> iter = data_set.iterator();
@@ -82,7 +82,7 @@ public class Pruning {
 				count++;
 			} 
 		}
-		System.out.println("Test data size = "+ data_set.size());
+		System.out.println(dataset_type + " data size = "+ data_set.size());
 		accuracy = (double)(count*100)/data_set.size();		
 		return accuracy;
 	}	
