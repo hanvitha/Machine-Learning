@@ -35,6 +35,7 @@ public class DecisionTree {
 			rootNode.attribute = selectedAttr;
 			rootNode.classLabel = getClassLabel(rootNode.rowData);
 			rootNode.deleted_attrs.add(selectedAttr);
+			
 			if(selectedAttr!=-1){
 				rootNode.left = ID3Algorithm.classifyData(rootNode,"0");
 				rootNode.left.node = nodes++;

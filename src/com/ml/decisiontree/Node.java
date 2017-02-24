@@ -20,12 +20,12 @@ public class Node {
 	Node(){
 		deleted_attrs = new ArrayList<Integer>();
 		attribute = -1;
-		classLabel = '2';
+		classLabel = 'N';//Not yet assigned class value
 		rowData = new ArrayList<Instance>();
 		left = null;
 		right = null;
 		isLeafNode= false;
-		
+		parent = null;
 	}
 
 }
