@@ -9,13 +9,13 @@ import java.io.IOException;
 
 
 public class Instance {
+	
 	public String classValue;
 	public int index;
 	public String[] attributes;
 	public static int attributeCount;
 	public static ArrayList<String> attributeLabels = new ArrayList<String>();
 	
-
 	public ArrayList<Instance> FetchData(String dataSet){
 		String line = "";
 		int count = 0, x= 0;

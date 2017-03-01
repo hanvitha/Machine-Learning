@@ -8,7 +8,7 @@ java main training_set.csv validation_set.csv test_set.csv 0.2 </br>
 </br>
 
 
-<b>Java project name:</b> MachineLearning</br></br>
+<b>Java project name:</b> Machine Learning</br></br>
 
 <b>Source code:</b></br>
 src/com/ml/decisiontree</br>

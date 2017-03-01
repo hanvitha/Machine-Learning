@@ -75,13 +75,10 @@ public class RandomFunction {
 	private static int selectAttrUsingRandom(ArrayList<Instance> rowData, ArrayList<Integer> deleted_attrs, int min, int max) {
 		Random randFn = new Random();
 		int rand = randFn.nextInt(max-min);
-		System.out.println("deleted attrs "+deleted_attrs.toString());
 		while(deleted_attrs.contains(rand)){
 			if(deleted_attrs.size()==18)
 				return -1;
 			rand = randFn.nextInt(max-min);
-			System.out.println("deleted attrs "+deleted_attrs.toString());
-			System.out.println(rand);
 		}
 		return rand;
 	}
