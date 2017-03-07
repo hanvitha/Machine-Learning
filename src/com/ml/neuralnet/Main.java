@@ -8,34 +8,38 @@ public class Main {
 	public static int trainPercent;
 	public static float errorTolerance;
 	public static int noOfHiddenLayers;
+	public static float learningRate;
+	
 	public static void main(String args[]) {
-		int layerSize[];
 		
 		//input
 		datasetPath = args[0];
-		
+		String preprocessedPath = Preprocessing.getPreprocessedPath(datasetPath);
 		
 		//fetchingData and pre process
-		dataset = Preprocessing.FetchAndPreprocessInput(datasetPath);
-		NeuralNetwork neuralnet = new NeuralNetwork();
+		dataset = Preprocessing.FetchAndPreprocessInput(datasetPath, preprocessedPath);
+
+		 learningRate = (float)0.3;
+		//write pre-processed data into file
+		
 		trainPercent = Integer.parseInt(args[1]);
 		errorTolerance =  Float.parseFloat(args[2]);
 		noOfHiddenLayers = Integer.parseInt(args[3]);
-		layerSize = new int[noOfHiddenLayers];
-		for(int i=0; i < noOfHiddenLayers; i++){
-			layerSize[i] =Integer.parseInt( args[4+i]);
-		}
+
+		NeuralNetwork neuralnet = new NeuralNetwork();
 		
-		neuralnet.initLayers(layerSize);
+		int[] layersSizes = new int[noOfHiddenLayers];
+		for (int i = 0; i < noOfHiddenLayers; i++) {
+			layersSizes[i] = Integer.parseInt(args[4 + i]);
+		}
 		
 		//train
 		
-		neuralnet = BackPropagation.BuildNeuralNet(dataset);
+		neuralnet.BuildNeuralNet(dataset, layersSizes, trainPercent, learningRate, errorTolerance);
 		
 		
 		//test
-		
-		
+		neuralnet.testNeuralNet(dataset, trainPercent);
 		
 		
 	}
